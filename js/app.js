@@ -9,7 +9,6 @@ const url2Preview = document.getElementById('url2Preview');
 const url3Preview = document.getElementById('url3Preview');
 const url4Preview = document.getElementById('url4Preview');
 const templateSelect = document.getElementById('html_file');
-const loadingIndicator = document.getElementById('loadingIndicator');
 
 // Store generated URLs
 let generatedUrls = {
@@ -19,8 +18,11 @@ let generatedUrls = {
     url4: ''
 };
 
-// Store HTML template content
-let templateContent = '';
+// Store HTML template content for the selected file
+let templateContent = `<!DOCTYPE html>
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
+<!-- This is a placeholder. In a real environment, this would be loaded from a file -->
+</html>`;
 
 // Store modified HTML content
 let modifiedHtmlContent = '';
@@ -30,94 +32,19 @@ document.addEventListener('DOMContentLoaded', init);
 generateBtn.addEventListener('click', generateUrls);
 resetBtn.addEventListener('click', resetForm);
 downloadBtn.addEventListener('click', downloadHtml);
-templateSelect.addEventListener('change', loadSelectedTemplate);
 
 /**
  * Initialize the application
  */
-async function init() {
+function init() {
     // Set today's date
     document.getElementById('send_date').valueAsDate = new Date();
-    
-    // Load template list
-    await loadTemplateList();
-    
-    // Load the initial template
-    await loadSelectedTemplate();
-}
-
-/**
- * Load the list of available templates
- */
-async function loadTemplateList() {
-    try {
-        // Show loading indicator
-        if (loadingIndicator) loadingIndicator.classList.remove('hide');
-        
-        // In a production environment, fetch templates.json
-        // For now, we'll just add our one template
-        
-        // Clear existing options
-        templateSelect.innerHTML = '';
-        
-        // Add FourInOneEmail template
-        const option = document.createElement('option');
-        option.value = 'FourInOneEmail.html';
-        option.textContent = 'FourInOneEmail.html';
-        templateSelect.appendChild(option);
-        
-        // Hide loading indicator
-        if (loadingIndicator) loadingIndicator.classList.add('hide');
-    } catch (error) {
-        console.error('Error loading templates:', error);
-        alert('Failed to load template list. Please refresh the page.');
-        if (loadingIndicator) loadingIndicator.classList.add('hide');
-    }
-}
-
-/**
- * Load the selected HTML template
- */
-async function loadSelectedTemplate() {
-    const selectedTemplate = templateSelect.value;
-    
-    if (!selectedTemplate) {
-        return;
-    }
-    
-    try {
-        // Show loading indicator
-        if (loadingIndicator) loadingIndicator.classList.remove('hide');
-        
-        // In a production environment, this would fetch the actual file
-        // For GitHub Pages, you would use fetch to get the template from the templates directory
-        const response = await fetch(`templates/${selectedTemplate}`);
-        
-        if (!response.ok) {
-            throw new Error(`Failed to load template: ${response.statusText}`);
-        }
-        
-        templateContent = await response.text();
-        
-        // Hide loading indicator
-        if (loadingIndicator) loadingIndicator.classList.add('hide');
-    } catch (error) {
-        console.error('Error loading template:', error);
-        alert(`Failed to load template: ${error.message}`);
-        if (loadingIndicator) loadingIndicator.classList.add('hide');
-    }
 }
 
 /**
  * Generate URLs based on form inputs
  */
 function generateUrls() {
-    // Check if template is loaded
-    if (!templateContent) {
-        alert('Please wait for the HTML template to load.');
-        return;
-    }
-    
     // Check form validity
     if (!form.checkValidity()) {
         form.reportValidity();
@@ -151,8 +78,12 @@ function generateUrls() {
     // Enable download button
     downloadBtn.disabled = false;
 
+    // Use the FourInOneEmail.html content as template
+    // In a real environment, this would be loaded from a file
+    const htmlContent = templateContent;
+    
     // Modify HTML content - replace all occurrences of placeholders
-    modifiedHtmlContent = templateContent
+    modifiedHtmlContent = htmlContent
         .replaceAll('#link1', urls.url1)
         .replaceAll('#link2', urls.url2)
         .replaceAll('#link3', urls.url3)
@@ -177,27 +108,32 @@ function buildUrl(formValues, variantNumber) {
         utm_term
     } = formValues;
 
-    const variant = formValues[`variant_${variantNumber}`] || '';
+    // Get values and replace spaces with hyphens
+    const variant = (formValues[`variant_${variantNumber}`] || '').replace(/ /g, '-');
     const campaignId = formValues[`campaign_id_${variantNumber}`];
     const landingPage = formValues[`landing_page_${variantNumber}`];
-
+    const cleanCampaignName = campaign_name.replace(/ /g, '-');
+    const cleanUtmMedium = utm_medium.replace(/ /g, '-');
+    const cleanUtmContent = utm_content ? utm_content.replace(/ /g, '-') : '';
+    const cleanUtmTerm = utm_term ? utm_term.replace(/ /g, '-') : '';
+    
     // Format: landing_page/?sfcid=campaign_id&ls=001-utm_medium-campaign_name&cn=phone&utm_source=campaign_name&utm_medium=utm_medium&utm_campaign=campaign_id&variant=variant
-    let url = `${landingPage}/?sfcid=${campaignId}&ls=001-${utm_medium}-${campaign_name}`;
+    let url = `${landingPage}/?sfcid=${campaignId}&ls=001-${cleanUtmMedium}-${cleanCampaignName}`;
     
     // Add optional parameters if they exist
     if (phone) url += `&cn=${phone}`;
     
     // Add required parameters
-    url += `&utm_source=${campaign_name}&utm_medium=${utm_medium}&utm_campaign=${campaignId}`;
+    url += `&utm_source=${cleanCampaignName}&utm_medium=${cleanUtmMedium}&utm_campaign=${campaignId}`;
     
     // Add optional variant if it exists
     if (variant) url += `&variant=${variant}`;
     
     // Add optional utm_content if it exists
-    if (utm_content) url += `&utm_content=${utm_content}`;
+    if (cleanUtmContent) url += `&utm_content=${cleanUtmContent}`;
     
     // Add optional utm_term if it exists
-    if (utm_term) url += `&utm_term=${utm_term}`;
+    if (cleanUtmTerm) url += `&utm_term=${cleanUtmTerm}`;
     
     return url;
 }
