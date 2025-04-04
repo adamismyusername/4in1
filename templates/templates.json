@@ -1,0 +1,10 @@
+{
+  "templates": [
+    {
+      "name": "FourInOneEmail.html",
+      "path": "templates/FourInOneEmail.html",
+      "description": "Four-in-one email template with multiple link placements"
+    }
+    // Add more templates here as needed
+  ]
+}
