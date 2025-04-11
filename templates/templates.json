@@ -1,7 +1,11 @@
 {
   "templates": [
     {
-      "name": "FourInOneEmail.html",
+      "name": "FourInOneEmail v2",
+      "path": "templates/FourInOneEmail-v2.html"
+    },    
+    {
+      "name": "FourInOneEmail v1",
       "path": "templates/FourInOneEmail.html",
       "description": "Four-in-one email template with multiple link placements"
     }
