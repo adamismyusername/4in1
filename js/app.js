@@ -54,17 +54,25 @@ async function loadTemplateList() {
         // Show loading indicator
         if (loadingIndicator) loadingIndicator.classList.remove('hide');
         
-        // In a production environment, fetch templates.json
-        // For now, we'll just add our one template
+        // Fetch templates.json
+        const response = await fetch('templates.json');
+        
+        if (!response.ok) {
+            throw new Error(`Failed to load templates: ${response.statusText}`);
+        }
+        
+        const templatesData = await response.json();
         
         // Clear existing options
         templateSelect.innerHTML = '';
         
-        // Add FourInOneEmail template
-        const option = document.createElement('option');
-        option.value = 'FourInOneEmail.html';
-        option.textContent = 'FourInOneEmail.html';
-        templateSelect.appendChild(option);
+        // Add template options from templates.json
+        templatesData.templates.forEach(template => {
+            const option = document.createElement('option');
+            option.value = template.path.split('/').pop(); // Extract filename from path
+            option.textContent = template.name;
+            templateSelect.appendChild(option);
+        });
         
         // Hide loading indicator
         if (loadingIndicator) loadingIndicator.classList.add('hide');
