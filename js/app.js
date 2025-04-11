@@ -25,6 +25,19 @@ let templateContent = '';
 // Store modified HTML content
 let modifiedHtmlContent = '';
 
+// Default templates to use if JSON file can't be loaded
+const defaultTemplates = [
+    {
+        name: "FourInOneEmail v1",
+        path: "templates/FourInOneEmail.html",
+        description: "Four-in-one email template with multiple link placements"
+    },
+    {
+        name: "FourInOneEmail v2",
+        path: "templates/FourInOneEmail-v2.html"
+    }
+];
+
 // Event Listeners
 document.addEventListener('DOMContentLoaded', init);
 generateBtn.addEventListener('click', generateUrls);
@@ -54,31 +67,49 @@ async function loadTemplateList() {
         // Show loading indicator
         if (loadingIndicator) loadingIndicator.classList.remove('hide');
         
-        // Fetch templates.json
-        const response = await fetch('templates.json');
-        
-        if (!response.ok) {
-            throw new Error(`Failed to load templates: ${response.statusText}`);
-        }
-        
-        const templatesData = await response.json();
-        
         // Clear existing options
         templateSelect.innerHTML = '';
         
-        // Add template options from templates.json
-        templatesData.templates.forEach(template => {
-            const option = document.createElement('option');
-            option.value = template.path.split('/').pop(); // Extract filename from path
-            option.textContent = template.name;
-            templateSelect.appendChild(option);
-        });
+        try {
+            // Attempt to fetch templates.json
+            const response = await fetch('templates.json');
+            
+            if (!response.ok) {
+                throw new Error(`Failed to load templates: ${response.statusText}`);
+            }
+            
+            const templatesData = await response.json();
+            
+            // Add template options from templates.json
+            templatesData.templates.forEach(template => {
+                const option = document.createElement('option');
+                option.value = template.path.split('/').pop(); // Extract filename from path
+                option.textContent = template.name;
+                templateSelect.appendChild(option);
+            });
+        } catch (jsonError) {
+            console.warn('Could not load templates.json, using default templates:', jsonError);
+            
+            // If templates.json fails to load, use default templates
+            defaultTemplates.forEach(template => {
+                const option = document.createElement('option');
+                option.value = template.path.split('/').pop(); // Extract filename from path
+                option.textContent = template.name;
+                templateSelect.appendChild(option);
+            });
+        }
         
         // Hide loading indicator
         if (loadingIndicator) loadingIndicator.classList.add('hide');
     } catch (error) {
-        console.error('Error loading templates:', error);
-        alert('Failed to load template list. Please refresh the page.');
+        console.error('Error in loadTemplateList:', error);
+        
+        // As a last resort, add FourInOneEmail.html as a fallback
+        const option = document.createElement('option');
+        option.value = 'FourInOneEmail.html';
+        option.textContent = 'FourInOneEmail v1';
+        templateSelect.appendChild(option);
+        
         if (loadingIndicator) loadingIndicator.classList.add('hide');
     }
 }
@@ -114,6 +145,22 @@ async function loadSelectedTemplate() {
     } catch (error) {
         console.error('Error loading template:', error);
         alert(`Failed to load template: ${error.message}`);
+        
+        // Set a minimal HTML template as fallback
+        templateContent = `<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Template</title>
+</head>
+<body>
+    <p>Template could not be loaded. This is a fallback template.</p>
+    <p>Link 1: <a href="#link1">#link1</a></p>
+    <p>Link 2: <a href="#link2">#link2</a></p>
+    <p>Link 3: <a href="#link3">#link3</a></p>
+    <p>Link 4: <a href="#link4">#link4</a></p>
+</body>
+</html>`;
+        
         if (loadingIndicator) loadingIndicator.classList.add('hide');
     }
 }
