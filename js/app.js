@@ -97,9 +97,11 @@ async function loadSelectedTemplate() {
         // Show loading indicator
         if (loadingIndicator) loadingIndicator.classList.remove('hide');
         
-        // In a production environment, this would fetch the actual file
-        // For GitHub Pages, you would use fetch to get the template from the templates directory
-        const response = await fetch(`templates/${selectedTemplate}`);
+        // Get the full path for the selected template
+        const templatePath = `templates/${selectedTemplate}`;
+        
+        // Fetch the template content
+        const response = await fetch(templatePath);
         
         if (!response.ok) {
             throw new Error(`Failed to load template: ${response.statusText}`);
