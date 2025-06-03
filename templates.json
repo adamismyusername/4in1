@@ -1,32 +1,32 @@
 {
   "templates": [
     {
-      "name": "FourInOneEmail v1",
+      "name": "FourInOneEmail v1 (extra info)",
       "path": "templates/FourInOneEmail.html",
       "description": "Four-in-one email template with multiple link placements"
     },
     {
-      "name": "FourInOneEmail v2",
+      "name": "FourInOneEmail v2 (extra info)",
       "path": "templates/FourInOneEmail-v2.html"
     },    
     {
-      "name": "FourInOneEmail v3",
+      "name": "FourInOneEmail v3 (extra info)",
       "path": "templates/FourInOneEmail-v3.html"
     }, 
     {
-      "name": "FourInOneEmail v4",
+      "name": "FourInOneEmail v4 (extra info)",
       "path": "templates/FourInOneEmail-v4.html"
     }, 
     {
-      "name": "FourInOneEmail v5",
+      "name": "FourInOneEmail v5 (extra info)",
       "path": "templates/FourInOneEmail-v5.html"
     }, 
     {
-      "name": "FourInOneEmail v6",
+      "name": "FourInOneEmail v6 (extra info)",
       "path": "templates/FourInOneEmail-v6.html"
     }, 
     {
-      "name": "FourInOneEmail v7",
+      "name": "FourInOneEmail v7 (extra info)",
       "path": "templates/FourInOneEmail-v7.html"
     }, 
   ]
