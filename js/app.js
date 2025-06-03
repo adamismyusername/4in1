@@ -3,6 +3,7 @@ const form = document.getElementById('urlForm');
 const generateBtn = document.getElementById('generateBtn');
 const resetBtn = document.getElementById('resetBtn');
 const downloadBtn = document.getElementById('downloadBtn');
+const previewBtn = document.getElementById('previewBtn');
 const previewSection = document.getElementById('previewSection');
 const url1Preview = document.getElementById('url1Preview');
 const url2Preview = document.getElementById('url2Preview');
@@ -63,6 +64,7 @@ document.addEventListener('DOMContentLoaded', init);
 generateBtn.addEventListener('click', generateUrls);
 resetBtn.addEventListener('click', resetForm);
 downloadBtn.addEventListener('click', downloadHtml);
+previewBtn.addEventListener('click', previewTemplate);
 templateSelect.addEventListener('change', loadSelectedTemplate);
 
 /**
@@ -141,12 +143,17 @@ async function loadSelectedTemplate() {
     const selectedTemplate = templateSelect.value;
     
     if (!selectedTemplate) {
+        // Disable preview button if no template selected
+        previewBtn.disabled = true;
         return;
     }
     
     try {
         // Show loading indicator
         if (loadingIndicator) loadingIndicator.classList.remove('hide');
+        
+        // Disable preview button while loading
+        previewBtn.disabled = true;
         
         // Get the full path for the selected template
         const templatePath = `templates/${selectedTemplate}`;
@@ -159,6 +166,9 @@ async function loadSelectedTemplate() {
         }
         
         templateContent = await response.text();
+        
+        // Enable preview button after successful load
+        previewBtn.disabled = false;
         
         // Hide loading indicator
         if (loadingIndicator) loadingIndicator.classList.add('hide');
@@ -181,7 +191,37 @@ async function loadSelectedTemplate() {
 </body>
 </html>`;
         
+        // Enable preview button even with fallback template
+        previewBtn.disabled = false;
+        
         if (loadingIndicator) loadingIndicator.classList.add('hide');
+    }
+}
+
+/**
+ * Preview the selected HTML template in a new tab
+ */
+function previewTemplate() {
+    if (!templateContent) {
+        alert('Please wait for the HTML template to load.');
+        return;
+    }
+    
+    // Create a blob with the template content
+    const blob = new Blob([templateContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    
+    // Open in a new tab
+    const newWindow = window.open(url, '_blank');
+    
+    // Clean up the blob URL after a short delay
+    setTimeout(() => {
+        URL.revokeObjectURL(url);
+    }, 1000);
+    
+    // If popup was blocked, provide alternative
+    if (!newWindow) {
+        alert('Popup blocked! Please allow popups for this site or try again.');
     }
 }
 
@@ -301,6 +341,11 @@ function resetForm() {
     
     // Clear modified HTML content
     modifiedHtmlContent = '';
+    
+    // Re-enable preview button if template is loaded
+    if (templateContent) {
+        previewBtn.disabled = false;
+    }
 }
 
 /**
