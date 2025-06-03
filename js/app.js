@@ -35,6 +35,26 @@ const defaultTemplates = [
     {
         name: "FourInOneEmail v2",
         path: "templates/FourInOneEmail-v2.html"
+    },
+    {
+        name: "FourInOneEmail v3",
+        path: "templates/FourInOneEmail-v3.html"
+    },
+    {
+        name: "FourInOneEmail v4",
+        path: "templates/FourInOneEmail-v4.html"
+    },
+    {
+        name: "FourInOneEmail v5",
+        path: "templates/FourInOneEmail-v5.html"
+    },
+    {
+        name: "FourInOneEmail v6",
+        path: "templates/FourInOneEmail-v6.html"
+    },
+    {
+        name: "FourInOneEmail v7",
+        path: "templates/FourInOneEmail-v7.html"
     }
 ];
 
