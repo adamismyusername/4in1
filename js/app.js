@@ -29,32 +29,32 @@ let modifiedHtmlContent = '';
 // Default templates to use if JSON file can't be loaded
 const defaultTemplates = [
     {
-        name: "FourInOneEmail v1 (Hannity-Trump-Musk | Musk 36T | IRS Loophole | Gold Standard)",
+        name: "FourInOneEmail v1",
         path: "templates/FourInOneEmail.html",
         description: "Four-in-one email template with multiple link placements"
     },
     {
-        name: "FourInOneEmail v2 (Hannity-Trump-Musk | Dollar Crash | IRS Loophole | Shocking Gold)",
+        name: "FourInOneEmail v2",
         path: "templates/FourInOneEmail-v2.html"
     },
     {
-        name: "FourInOneEmail v3 (Hannity-Biden | Musk 36T | DQ Warning | Video Cash vs Gold)",v
+        name: "FourInOneEmail v3",
         path: "templates/FourInOneEmail-v3.html"
     },
     {
-        name: "FourInOneEmail v4 (Hannity-Trump | Retirement Checklist | Beginners Guide | Digital Dollar)",
+        name: "FourInOneEmail v4",
         path: "templates/FourInOneEmail-v4.html"
     },
     {
-        name: "FourInOneEmail v5 (Hannity-Stagflation | Avalanche | DQ Warning | Beginners Guide)",
+        name: "FourInOneEmail v5",
         path: "templates/FourInOneEmail-v5.html"
     },
     {
-        name: "FourInOneEmail v6 (Video Cash vs Gold | IRS Loophole | Retirement Checklist | Musk 36T)",
+        name: "FourInOneEmail v6",
         path: "templates/FourInOneEmail-v6.html"
     },
     {
-        name: "FourInOneEmail v7 (Beginners Guide | Hannity-Biden | DQ Warning | Digital Dollar )",
+        name: "FourInOneEmail v7",
         path: "templates/FourInOneEmail-v7.html"
     }
 ];
